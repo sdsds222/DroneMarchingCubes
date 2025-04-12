@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.js"></script>
+
+<head>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+        }
+
+        #test {
+            position: absolute;
+            left: 15%;
+            top: 80%;
+            transform: translate(-50%, -50%);
+            background-color: rgb(100, 100, 100);
+            width: 80px;
+            height: 80px;
+        }
+        #test1 {
+            position: absolute;
+            left: 85%;
+            top: 80%;
+            transform: translate(-50%, -50%);
+            background-color: rgb(100, 100, 100);
+            width: 80px;
+            height: 80px;
+        }
+
+        .text {
+            padding: 10px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+            background: #eee;
+        }
+
+        .div1 {
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 100%;
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            margin-left: -100px;
+            margin-top: -100PX;
+        }
+
+        .div2 {
+            width: 50px;
+            height: 50px;
+            background: rgb(255, 255, 255);
+            border-radius: 100%;
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            margin-left: -25px;
+            margin-top: -25px;
+        }
+
+        .div3 {
+            width: 200px;
+            height: 200px;
+            border-radius: 100%;
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            margin-left: -100px;
+            margin-top: -100PX;
+        }
+
+        #app {
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            transform: translate(-50%, -50%);
+            background-color: rgb(100, 100, 100);
+            width: 300px;
+            height: 400px;
+        }
+
+        /* 添加一个样式来显示拖动条 */
+        #slider-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1;
+            color: white;
+        }
+
+         /* 添加一个样式来显示拖动条 */
+         #slider-container1 {
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            z-index: 1;
+            color: white;
+        }
+
+        input[type="range"] {
+            width: 300px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport" />
+    <title>3D景区云游</title>
+    <script src="./js/axios.min.js"></script>
+    <script type="module" src="script.js"></script>
+</head>
+
+<body>
+    <div id="test">
+        <div class="text" align="center">
+            <h5>上升</h5>
+        </div>
+    </div>
+    <div id="test1">
+        <div class="text" align="center">
+            <h5>下降</h5>
+        </div>
+    </div>
+    <div id="container"></div>
+    <div class="div1"></div>
+    <div class="div2"></div>
+    <div class="div3"></div>
+    <div id="app" style="display: none;">
+    </div>
+
+
+
+</body>
+
+<script>
+    window.rad = 0;
+    window.d = 0;
+    let div3 = document.querySelector('.div3')
+    let div2 = document.querySelector('.div2')
+    let r = 25		//摇杆的半径
+    let r2 = 100	//底盘的半径
+    let x = div2.offsetLeft + r		//加上r半径的偏移到中心
+    let y = div2.offsetTop + r
+    div3.ontouchmove = (e) => {
+        let t = e.changedTouches[0]
+        //开根 触摸点到摇杆中心点的距离
+        let d = Math.sqrt(Math.pow(t.pageX - x, 2) + Math.pow(t.pageY - y, 2))
+        d = d > (r2 - r) ? r2 - r : d
+        //三角函数求反正切 减去xy偏移到中心点
+        let radin = Math.atan2(t.pageY - y, t.pageX - x)
+        let vx = x + Math.cos(radin) * d
+        let vy = y + Math.sin(radin) * d
+        div2.style.left = vx + 'px'
+        div2.style.top = vy + 'px'
+        window.rad = radin;
+        window.d = d;
+    }
+    div3.ontouchend = () => {
+        div2.style.left = x + 'px'
+        div2.style.top = y + 'px'
+        window.d = 0;
+    }
+</script>
+
+</html>
